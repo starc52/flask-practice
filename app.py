@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, request
+from flask import Flask, render_template, flash, redirect, request, url_for
 
 import traceback, time, os
 
@@ -19,7 +19,7 @@ if not os.path.exists('logs'):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return redirect(url_for("login"))
 
 @app.errorhandler(404)
 def error404(e):
@@ -45,16 +45,40 @@ def register():
     if request.method == 'POST':
         new_username = request.form['username']
         user_password = encrypt(request.form['password'])
+        check_if_exists = User.query.filter_by(username= new_username).first()
+        if check_if_exists:
+            flash(f"Cannot create {new_username} already exists try a different user name")
+            return render_template("register.html")
         try :
             new_user = User(username=new_username, password=user_password)
             db.session.add(new_user)
             db.session.commit()
-            flash(f"{new_username} Successfully Created hashed password is {new_user.password}")
+            flash(f"{new_username} Successfully Created login go to Login page")
         except Exception as e:
             return render_template("exception.html", exp=e)
 
     return render_template("register.html")
     
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        try:
+            query = User.query.filter_by(username= username).first()
+            if not (query is None):
+                if check(password, query.password):
+                    redirect(url_for(f"profie/{username}", loggedIn=True))
+                else:
+                    flash("Username / Password incorrect Please check it")
+            else:
+                flash("Particular user Doesn't Exist")
+            return render_template("login.html")
+        except Exception as exp:
+            return render_template("exception.html", exp=exp)
+    
+    return render_template("login.html")
+
 
 if __name__ == "__main__":
     with app.app_context():

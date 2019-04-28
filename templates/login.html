@@ -4,11 +4,11 @@
 
 {% with status = get_flashed_messages() %}
     {% if status %}
-        <p style="color: orange">{{ status[0] }}</p>
+        <p style="color: red">{{ status[0] }}</p>
     {% endif %}
 {% endwith %}
 
-<form action="{{ url_for('register') }}" method="post">
+<form action="{{ url_for('login') }}" method="post">
     username <br>
     <input type="text" name="username" id="username"> <br>
     password <br>
@@ -16,6 +16,6 @@
     <input type="submit" value="submit">
 </form>
 
-<p>If already a user, visit <a href="{{ url_for('login') }}">login page</a></p>
+<p>If new here, register <a href="{{ url_for('register') }}">here</a></p>
 
 {% endblock %}
