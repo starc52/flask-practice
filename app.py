@@ -22,7 +22,7 @@ def index():
 
 @app.errorhandler(404)
 def error404(e):
-    return render_template("404.html", e=e)
+    return render_template("404.html")
 
 @app.route("/recents")
 def recents():
