@@ -37,7 +37,7 @@ def recents():
         log = f"Render Failed at {time.asctime()}\n\nException: {exp}\n\n{tracebk}\n\n\n"
         logFile.write(log)
         logFile.close()
-        return render_template("error500.html", exp=exp, tried="rendering recents.htmls", tb=tracebk)
+        return render_template("error500.html", exp=exp, tried="rendering recents.htmls", tb="Trace back stored in logs")
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -53,8 +53,14 @@ def register():
             db.session.add(new_user)
             db.session.commit()
             flash(f"{new_username} Successfully Created login go to Login page")
-        except Exception as e:
-            return render_template("exception.html", exp=e)
+        except Exception as exp:
+            tracebk = traceback.format_exc()
+            logFile = open("logs/register_failed", 'a')
+            log = f"Register Failed at {time.asctime()}\n\nException: {exp}\n\n{tracebk}\n\n\n"
+            logFile.write(log)
+            logFile.close()
+            return render_template("error500.html", exp=exp, tried="registering", tb="Trace back stored in logs")
+
 
     return render_template("register.html")
     
@@ -77,7 +83,12 @@ def login():
                 flash("Particular user Doesn't Exist")
             return render_template("login.html")
         except Exception as exp:
-            return render_template("exception.html", exp=exp)
+            tracebk = traceback.format_exc()
+            logFile = open("logs/login_failed", 'a')
+            log = f"Login Failed at {time.asctime()}\n\nException: {exp}\n\n{tracebk}\n\n\n"
+            logFile.write(log)
+            logFile.close()
+            return render_template("error500.html", exp=exp, tried=f"logging in user - {username}", tb="Trace back stored in logs")
     
     return render_template("login.html")
 

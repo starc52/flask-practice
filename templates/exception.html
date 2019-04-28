@@ -2,7 +2,12 @@
 
 {% block body %}
 
-<h1>Exception has occured</h1>
-<p style="color: red;">{{ exp }}</p>
+<div class="jumbotron text-center">
+    <h1>Exception has occured</h1>
+</div>
+
+<div class="alert alert-danger" role="alert">
+    <p>{{ exp }}</p>
+</div>
 
 {% endblock %}

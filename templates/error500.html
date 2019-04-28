@@ -2,12 +2,18 @@
 
 {% block body %}
 
-<h1>Exception Has Occured</h1>
-<p>While trying to {{ tried }}</p>
+<div class="jumbotron text-center">
+    <h1>Exception Has Occured</h1>
+    <p>While trying to {{ tried }}</p>
+</div>
 
-<h3 style="color: red;">{{ exp }}</h3>
 
-<h1>Traceback is </h1>
-<p>{{ tb }}</p>
+<div class="alert alert-danger" role="alert">
+    <h3>{{ exp }}</h3>
+</div>
+
+<div class="alert alert-warning" role="alert">
+    <p>{{ tb }}</p>
+</div>
 
 {% endblock %}
