@@ -11,5 +11,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f"UserID: {self.id}, Username: {self.username}"
+class sacredText(db.Model):
+    __tablename__="text"
 
+    id = db.Column('id', db.Integer, unique=True, primary_key=True)
+    text = db.Column('text', db.String(500), unique=False, nullable=False)
+    user = db.Column('writtenBy', db.string(255), unique=False, nullable=False)
+    def __repr__(self):
+        return f"UserId: {self.user}, UserText: {self.text}"
     
