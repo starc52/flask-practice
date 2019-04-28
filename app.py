@@ -11,8 +11,7 @@ app.secret_key = os.urandom(23)
 
 db.init_app(app)
 
-keyfile = open("key.bin")
-app.secret_key = keyfile.read()
+app.secret_key = os.urandom(27)
 
 if not os.path.exists('logs'):
     os.makedirs('logs')
