@@ -3,22 +3,21 @@
 {% block body %}
 
 <div class="jumbotron text-center">
-    <h1>Register</h1>
+    <h1>Login</h1>
 </div>
 
 
 <div class="container">
 
-    
     {% with status = get_flashed_messages() %}
         {% if status %}
-            <div class="alert alert-info" role="alert">
-                <p>{{ status[0] }}</p>
+            <div class="alert alert-warning" role="alert">
+                    <p>{{ status[0] }}</p>
             </div>
         {% endif %}
-    {% endwith %} 
+    {% endwith %}    
 
-    <form action="{{ url_for('register') }}" method="post">
+    <form action="{{ url_for('login') }}" method="post">
         <div class="form-group">
             <label for="username">Username :</label>
             <input type="text" name="username" id="username"> <br>
@@ -30,7 +29,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
         <div class="form-group">
             <br>
-            <p>If already a user, visit <a href="{{ url_for('login') }}">login page</a></p>
+            <p>If new here, register <a href="{{ url_for('register') }}">here</a></p>        
         </div>
     </form>
 
