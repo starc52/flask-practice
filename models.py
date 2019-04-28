@@ -1,9 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
-from password_mgm import *
-
 db = SQLAlchemy()
-
 
 class User(db.Model):
     __tablename__ = 'users'
