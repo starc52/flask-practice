@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>Exception Has Occured</h1>
+<p>While trying to {{ tried }}</p>
+
+<h3 style="color: red;">{{ exp }}</h3>
+
+<h1>Traceback is </h1>
+<p>{{ tb }}</p>
+
+{% endblock %}

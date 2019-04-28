@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% with status = get_flashed_messages() %}
+    {% if status %}
+        <p style="color: orange">{{ status[0] }}</p>
+    {% endif %}
+{% endwith %}
+
+<form action="{{ url_for('register') }}" method="post">
+    username <br>
+    <input type="text" name="username" id="username"> <br>
+    password <br>
+    <input type="password" name="password" id="password"> <br>
+    <input type="submit" value="submit">
+</form>
+
+{% endblock %}

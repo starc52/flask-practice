@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<ol>
+{% for text in recent %}
+    <li>{{ text }}</li>
+{% endfor %}
+</ol>
+
+{% endblock %}
