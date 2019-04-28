@@ -2,16 +2,15 @@
 {% block body %}
 {% if user %}
     <a href="{{ url_for('logout', user=user) }}">Logout</a>
-    {% for textblock in text %}
+    {% for n in range(users|length)%}
     <div class="card" style="width: 18rem;">
         <div class="card-body">
-            <h5 class="card-title">{{user}}</h5>
-            <p class="card-text">{{textblock}}</p>
+            <h5 class="card-title">{{users[n]}}</h5>
+            <p class="card-text">{{text[n]}}</p>
         </div>
     </div>
     {% endfor %}
-    <a href="{{ url_for('addText', user=user) }}">AddText</a>
-    <a href="{{ url_for('allSacredTexts', user=user) }}">ViewAllTextsHere</a>
+    <a href={{ url_for('dashboard', user=user) }}>your Dashboard</a>
 {% else %}
     <h1>Please Login to view your Dashboard</h1>
 {% endif %}

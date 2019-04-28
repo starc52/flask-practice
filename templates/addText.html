@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+{% block body %}
+<div class="jumbotron text-center">
+    <h1>Add Text</h1>
+</div>
+
+
+<div class="container">
+
+    {% with status = get_flashed_messages() %}
+        {% if status %}
+            <div class="alert alert-warning" role="alert">
+                    <p>{{ status[0] }}</p>
+            </div>
+        {% endif %}
+    {% endwith %}    
+
+    <form action="{{ url_for('addText', user=user) }}" method="post">
+        <div class="form-group">
+            <label for="text">Text: </label>
+            <input type="text" name="text" id="text"> <br>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="form-group">
+            <br>
+            <p>Go back to your dashboard<a href="{{ url_for('dashboard', user=user) }}">here</a></p>        
+        </div>
+    </form>
+
+
+</div>
+{% endblock %}
