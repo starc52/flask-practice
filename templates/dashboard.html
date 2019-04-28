@@ -1,0 +1,6 @@
+{% if user %}
+    <a href="{{ url_for('logout', user=user) }}">Logout</a>
+    <h1>Yet to be Implemented</h1>
+{% else %}
+    <h1>Please Login to view your Dashboard</h1>
+{% endif %}

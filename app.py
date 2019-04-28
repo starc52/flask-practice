@@ -50,7 +50,7 @@ def register():
             flash(f"Cannot create {new_username} already exists try a different user name")
             return render_template("register.html")
         try :
-            new_user = User(username=new_username, password=user_password)
+            new_user = User(username=new_username, password=user_password, loggedIn=0)
             db.session.add(new_user)
             db.session.commit()
             flash(f"{new_username} Successfully Created login go to Login page")
@@ -61,6 +61,7 @@ def register():
     
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    # TODO Make one user not allow to login again by visiting login page while he is still logged in
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -68,7 +69,9 @@ def login():
             query = User.query.filter_by(username= username).first()
             if not (query is None):
                 if check(password, query.password):
-                    redirect(url_for(f"profie/{username}", loggedIn=True))
+                    query.loggedIn = 1
+                    db.session.commit()
+                    return redirect(url_for("dashboard", user=username))
                 else:
                     flash("Username / Password incorrect Please check it")
             else:
@@ -79,6 +82,31 @@ def login():
     
     return render_template("login.html")
 
+@app.route("/dashboard/<user>")
+def dashboard(user):
+    query = User.query.filter_by(username= user).first()
+    if query:
+        if query.loggedIn == 1:
+            # Get data and pass to render template
+            return render_template("dashboard.html", user=user)
+        else:
+            return render_template("dashboard.html")
+    else:
+        return render_template("404.html")
+
+@app.route("/logout/<user>")
+def logout(user):
+    # TODO Anyone can logout a User who is logged in, this should not be allowed
+    query = User.query.filter_by(username= user).first()
+    if query:
+        query.loggedIn = 0
+        db.session.commit()
+        flash("Successfully Logged Out")
+        return redirect(url_for('login'))
+    else:
+        return render("404.html")
+    
+    
 
 if __name__ == "__main__":
     with app.app_context():
