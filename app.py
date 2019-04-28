@@ -92,19 +92,39 @@ def login():
     
     return render_template("login.html")
 
-@app.route("/dashboard/<user>")
+@app.route("/dashboard/<user>/")
 def dashboard(user):
     query = User.query.filter_by(username= user).first()
     if query:
         if query.loggedIn == 1:
-            # Get data and pass to render template
-            return render_template("dashboard.html", user=user)
+            data = sacredText.query.filter_by(user= user)
+            texts = []
+            for x in data:
+                texts.append(x.text)
+            return render_template("dashboard.html", user=user, text=texts)
         else:
             return render_template("dashboard.html")
     else:
         return render_template("404.html")
+@app.route("/dashboard/addText/<user>/", methods=['GET', 'POST'])
+def addText(user):
+    if request.method == 'POST':
+        text=request.form['text']
+        try:
+            new_text = sacredText(text=text, user=user)
+            db.session.add(new_text)
+            db.session.commit()
+            flash("Successfully added the text")
+        except Exception as errrr:
+            tracebk = traceback.format_exc()
+            logFile = open("logs/addText_failed", 'a')
+            log = f"addText Failed at {time.asctime()}\n\nException: {errrr}\n\n{tracebk}\n\n\n"
+            logFile.write(log)
+            logFile.close()
+            return render_template("error500.html", exp=errrr, tried="addText", tb="Trace back stored in logs")
+    return render_template("addText.html", user=user)
 
-@app.route("/logout/<user>")
+@app.route("/logout/<user>/")
 def logout(user):
     # TODO Anyone can logout a User who is logged in, this should not be allowed
     query = User.query.filter_by(username= user).first()
@@ -116,8 +136,24 @@ def logout(user):
     else:
         return render("404.html")
     
+@app.route("/allSacredTexts/<user>", methods=['GET', 'POST'])
+def allSacredTexts(user):
+    query = User.query.filter_by(username= user).first()
+    if query:
+        if query.loggedIn == 1:
+            data = sacredText.query
+            users = []
+            texts = []
+            for x in data:
+                texts.append(x.text)
+            for x in data:
+                users.append(x.user)
+            return render_template("allDashboard.html", user=user, text=texts, users=users)
+        else:
+            return render_template("allDashboard.html")
+    else:
+        return render_template("404.html")
     
-
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
