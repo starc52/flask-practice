@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
+
 {% block body %}
+
 {% if user %}
     <a href="{{ url_for('logout', user=user) }}">Logout</a>
     {% for n in range(users|length)%}
@@ -12,6 +14,7 @@
     {% endfor %}
     <a href={{ url_for('dashboard', user=user) }}>your Dashboard</a>
 {% else %}
-    <h1>Please Login to view your Dashboard</h1>
+    <h1>Please Login to allSacredTexts</h1>
 {% endif %}
+
 {% endblock %}

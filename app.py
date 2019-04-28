@@ -106,6 +106,7 @@ def dashboard(user):
             return render_template("dashboard.html")
     else:
         return render_template("404.html")
+
 @app.route("/dashboard/addText/<user>/", methods=['GET', 'POST'])
 def addText(user):
     if request.method == 'POST':
@@ -115,13 +116,14 @@ def addText(user):
             db.session.add(new_text)
             db.session.commit()
             flash("Successfully added the text")
-        except Exception as errrr:
+        except Exception as exp:
             tracebk = traceback.format_exc()
             logFile = open("logs/addText_failed", 'a')
             log = f"addText Failed at {time.asctime()}\n\nException: {errrr}\n\n{tracebk}\n\n\n"
             logFile.write(log)
             logFile.close()
-            return render_template("error500.html", exp=errrr, tried="addText", tb="Trace back stored in logs")
+            return render_template("error500.html", exp=exp, tried="addText", tb="Trace back stored in logs")
+            
     return render_template("addText.html", user=user)
 
 @app.route("/logout/<user>/")
@@ -148,9 +150,9 @@ def allSacredTexts(user):
                 texts.append(x.text)
             for x in data:
                 users.append(x.user)
-            return render_template("allDashboard.html", user=user, text=texts, users=users)
+            return render_template("allSacredTexts.html", user=user, text=texts, users=users)
         else:
-            return render_template("allDashboard.html")
+            return render_template("allSacredTexts.html")
     else:
         return render_template("404.html")
     
