@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="jumbotron text-center">
+    <h1>Edit</h1>
+</div>
+
+
+<div class="container">
+    {% with status = get_flashed_messages() %}
+        {% if status %}
+            <div class="alert alert-info" role="alert">
+                <p>{{ status[0] }}</p>
+            </div>
+        {% endif %}
+    {% endwith %} 
+    <form action="{{ url_for('edit')}}" method="post">
+        <div class="form-group">
+            <label for="newPost">New Post :</label>
+            <input type="text" name="newPost" id="newPost"><br>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="form-group">
+            <br>
+            <p>If you want to cancel <a href="{{ url_for('dashboard', user= user) }}">login page</a></p>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

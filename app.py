@@ -98,10 +98,14 @@ def dashboard(user):
     if query:
         if query.loggedIn == 1:
             data = sacredText.query.filter_by(user= user)
+            ids = []
             texts = []
+            edited = []
             for x in data:
+                ids.append(x.id)
                 texts.append(x.text)
-            return render_template("dashboard.html", user=user, text=texts)
+                edited.append(x.edited)
+            return render_template("dashboard.html", user=user, text=texts, edited = edited, ids = ids)
         else:
             return render_template("dashboard.html")
     else:
@@ -144,18 +148,46 @@ def allSacredTexts(user):
     if query:
         if query.loggedIn == 1:
             data = sacredText.query
+            ids = []
             users = []
             texts = []
+            edited = []
             for x in data:
+                ids.append(x.id)
                 texts.append(x.text)
-            for x in data:
                 users.append(x.user)
-            return render_template("allSacredTexts.html", user=user, text=texts, users=users)
+                edited.append(x.edited)
+            return render_template("allSacredTexts.html", user=user, text=texts, users=users, edited=edited, ids = ids)
         else:
             return render_template("allSacredTexts.html")
     else:
         return render_template("404.html")
-    
+@app.route("/edit/<id>/<user>", methods=['GET', 'POST'])
+def edit(id, user):
+    if request.method == 'POST':
+        query = User.query.filter_by(username = user).first()
+        if query:
+            if query.loggedIn == 1:
+                try:
+                    new_text = request.form['newPost']
+                    text = sacredText.query.filter_by(id = id)
+                    text.text = new_text
+                    db.session.commit()
+                    flash(f"Added Text")
+                except:
+                    tracebk = traceback.format_exc()
+                    logFile = open("logs/edit_failed", 'a')
+                    log = f"edit Failed at {time.asctime()}\n\nException: {errrr}\n\n{tracebk}\n\n\n"
+                    logFile.write(log)
+                    logFile.close()
+                    return render_template("error500.html", exp=exp, tried="edit", tb="Trace back stored in logs")
+
+            else:
+                return render_template("404.html")
+        else:
+            return render_template("404.html")
+    return render_template("edit.html", id = id, user = user)
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()

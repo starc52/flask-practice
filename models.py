@@ -18,6 +18,7 @@ class sacredText(db.Model):
     id = db.Column('id', db.Integer, unique=True, primary_key=True)
     text = db.Column('text', db.String(500), unique=False, nullable=False)
     user = db.Column('user', db.String(255), unique=False, nullable=False)
+    edited = db.Column('edited', db.Integer, unique=False)
     def __repr__(self):
-        return f"UserId: {self.user}, UserText: {self.text}"
+        return f"UserId: {self.user}, UserText: {self.text} edited:{self.edited}"
     

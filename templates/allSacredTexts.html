@@ -9,6 +9,11 @@
         <div class="card-body">
             <h5 class="card-title">{{users[n]}}</h5>
             <p class="card-text">{{text[n]}}</p>
+            {% if edited[n] !=0 %}
+                <p><a href="{{ url_for('edit', user= user, id = ids[n]) }}">edited</a></p>
+            {% else %}
+                <p><a href ="{{ url_for('edit', user= user, id = ids[n]) }}">edit</a></p>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
