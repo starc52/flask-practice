@@ -162,6 +162,7 @@ def allSacredTexts(user):
             return render_template("allSacredTexts.html")
     else:
         return render_template("404.html")
+        
 @app.route("/edit/<id>/<user>", methods=['GET', 'POST'])
 def edit(id, user):
     if request.method == 'POST':
