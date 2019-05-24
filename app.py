@@ -189,6 +189,30 @@ def edit(id, user):
             return render_template("404.html")
     return render_template("edit.html", id = id, user = user)
 
+@app.route("/dashboard/delete/<id>/<user>", methods = ['GET', 'POST'])
+def delete(id, user):
+    if request.method == 'POST':
+        query = User.query.filter_by(username = user).first()
+        if query:
+            if query.loggedIn == 1:
+                try:
+                    sacredText.query.filter_by(id = id).first().delete()
+                    db.session.commit
+                    flash(f'Deleted')
+                except:
+                    tracebk = traceback.format_exc()
+                    logFile = open("logs/edit_failed", 'a')
+                    log = f"edit Failed at {time.asctime()}\n\nException: {errrr}\n\n{tracebk}\n\n\n"
+                    logFile.write(log)
+                    logFile.close()
+                    return render_template("error500.html", exp=exp, tried="edit", tb="Trace back stored in logs")
+            else:
+                return render_template("404.html")
+        else:
+            return render_template("404.html")
+    else:
+        return render_template(url_for("dashboard", user = user))
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
