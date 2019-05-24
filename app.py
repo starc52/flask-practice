@@ -116,7 +116,7 @@ def addText(user):
     if request.method == 'POST':
         text=request.form['text']
         try:
-            new_text = sacredText(text=text, user=user)
+            new_text = sacredText(text=text, user=user, id = 0)
             db.session.add(new_text)
             db.session.commit()
             flash("Successfully added the text")
@@ -170,9 +170,9 @@ def edit(id, user):
         if query:
             if query.loggedIn == 1:
                 try:
-                    new_text = request.form['newPost']
-                    text = sacredText.query.filter_by(id = id)
-                    text.text = new_text
+                    new = request.form['newPost']
+                    old_text = sacredText.query.filter_by(id = id)
+                    old_text.text = new
                     db.session.commit()
                     flash(f"Added Text")
                 except:
