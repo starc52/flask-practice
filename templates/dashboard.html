@@ -14,17 +14,13 @@
         <div class="card-body">
             <h5 class="card-title">{{user}}</h5>
             <p class="card-text">{{text[n]}}</p>
-            {% if edited[n] !=0 %}
-                <p><a href = {{ url_for('edit', id=ids[n], user = user) }}>edited</a></p>
-            {% else %}
-                <p><a href = {{ url_for('edit', id=ids[n], user = user) }}>edit</a></p>
-            {% endif %}
+            <p><a href = {{ url_for('edit', id=ids[n], user = user) }}>edit</a></p>
             <p><a href = "{{ url_for('delete', user = user, id = ids[n]) }}">delete</a></p>
         </div>
     </div>
     {% endfor %}
-    <a href="{{ url_for('addText', user=user) }}">AddText</a>
-    <a href="{{ url_for('allSacredTexts', user=user) }}">ViewAllTextsHere</a>
+    <a href="{{ url_for('addText', user=user) }}">AddText</a><br>
+    <a href="{{ url_for('allSacredTexts', user=user) }}">ViewAllTextsHere</a><br>
 {% else %}
     <h1>Please Login to view your Dashboard</h1>
 {% endif %}

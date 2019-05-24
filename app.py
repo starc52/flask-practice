@@ -100,12 +100,10 @@ def dashboard(user):
             data = sacredText.query.filter_by(user= user)
             ids = []
             texts = []
-            edited = []
             for x in data:
                 ids.append(x.id)
                 texts.append(x.text)
-                edited.append(x.edited)
-            return render_template("dashboard.html", user=user, text=texts, edited = edited, ids = ids)
+            return render_template("dashboard.html", user=user, text=texts, ids = ids)
         else:
             return render_template("dashboard.html")
     else:
@@ -174,7 +172,8 @@ def edit(id, user):
                     old_text = sacredText.query.filter_by(id = id).first()
                     old_text.text = new_text
                     db.session.commit()
-                    flash(f"Added Text")
+                    flash(f"Changed Text")
+                    return redirect(url_for("dashboard", user = user))
                 except Exception as exp:
                     tracebk = traceback.format_exc()
                     logFile = open("logs/edit_failed", 'a')
