@@ -116,14 +116,14 @@ def addText(user):
     if request.method == 'POST':
         text=request.form['text']
         try:
-            new_text = sacredText(text=text, user=user, id = 0)
+            new_text = sacredText(text=text, user=user)
             db.session.add(new_text)
             db.session.commit()
             flash("Successfully added the text")
         except Exception as exp:
             tracebk = traceback.format_exc()
             logFile = open("logs/addText_failed", 'a')
-            log = f"addText Failed at {time.asctime()}\n\nException: {errrr}\n\n{tracebk}\n\n\n"
+            log = f"addText Failed at {time.asctime()}\n\nException: {exp}\n\n{tracebk}\n\n\n"
             logFile.write(log)
             logFile.close()
             return render_template("error500.html", exp=exp, tried="addText", tb="Trace back stored in logs")
@@ -170,15 +170,15 @@ def edit(id, user):
         if query:
             if query.loggedIn == 1:
                 try:
-                    new = request.form['newPost']
-                    old_text = sacredText.query.filter_by(id = id)
-                    old_text.text = new
+                    new_text = request.form['newPost']
+                    old_text = sacredText.query.filter_by(id = id).first()
+                    old_text.text = new_text
                     db.session.commit()
                     flash(f"Added Text")
-                except:
+                except Exception as exp:
                     tracebk = traceback.format_exc()
                     logFile = open("logs/edit_failed", 'a')
-                    log = f"edit Failed at {time.asctime()}\n\nException: {errrr}\n\n{tracebk}\n\n\n"
+                    log = f"edit Failed at {time.asctime()}\n\nException: {exp}\n\n{tracebk}\n\n\n"
                     logFile.write(log)
                     logFile.close()
                     return render_template("error500.html", exp=exp, tried="edit", tb="Trace back stored in logs")
@@ -189,29 +189,29 @@ def edit(id, user):
             return render_template("404.html")
     return render_template("edit.html", id = id, user = user)
 
-@app.route("/dashboard/delete/<id>/<user>", methods = ['GET', 'POST'])
+@app.route("/dashboard/delete/<id>/<user>")
 def delete(id, user):
-    if request.method == 'POST':
-        query = User.query.filter_by(username = user).first()
-        if query:
-            if query.loggedIn == 1:
-                try:
-                    sacredText.query.filter_by(id = id).first().delete()
-                    db.session.commit
-                    flash(f'Deleted')
-                except:
-                    tracebk = traceback.format_exc()
-                    logFile = open("logs/edit_failed", 'a')
-                    log = f"edit Failed at {time.asctime()}\n\nException: {errrr}\n\n{tracebk}\n\n\n"
-                    logFile.write(log)
-                    logFile.close()
-                    return render_template("error500.html", exp=exp, tried="edit", tb="Trace back stored in logs")
-            else:
-                return render_template("404.html")
+    query = User.query.filter_by(username = user).first()
+    if query:
+        if query.loggedIn == 1:
+            try:
+                if not sacredText.query.filter_by(id = id).first():
+                    return render_template("404.html")
+                sacredText.query.filter_by(id = id).delete()
+                db.session.commit()
+                flash(f'Deleted')
+                return redirect(url_for("dashboard", user = user))
+            except Exception as exp:
+                tracebk = traceback.format_exc()
+                logFile = open("logs/edit_failed", 'a')
+                log = f"edit Failed at {time.asctime()}\n\nException: {exp}\n\n{tracebk}\n\n\n"
+                logFile.write(log)
+                logFile.close()
+                return render_template("error500.html", exp=exp, tried="edit", tb="Trace back stored in logs")
         else:
             return render_template("404.html")
     else:
-        return render_template(url_for("dashboard", user = user))
+        return render_template("404.html")
 
 if __name__ == "__main__":
     with app.app_context():

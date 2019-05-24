@@ -2,6 +2,13 @@
 {% block body %}
 {% if user %}
     <a href="{{ url_for('logout', user=user) }}">Logout</a>
+    {% with status = get_flashed_messages() %}
+        {% if status %}
+            <div class="alert alert-info" role="alert">
+                <p>{{ status[0] }}</p>
+            </div>
+        {% endif %}
+    {% endwith %}
     {% for n in range(text|length) %}
     <div class="card" style="width: 18rem;">
         <div class="card-body">
